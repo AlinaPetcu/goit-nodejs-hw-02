@@ -1,25 +1,29 @@
-const express = require('express')
-const logger = require('morgan')
-const cors = require('cors')
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
 
-const contactsRouter = require('./routes/api/contacts')
+const contactsRouter = require('./routes/api/contacts'); // Asigură-te că calea este corectă
 
-const app = express()
+const app = express();
 
-const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
+const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
-app.use(logger(formatsLogger))
-app.use(cors())
-app.use(express.json())
+app.use(morgan(formatsLogger)); // Utilizează morgan pentru logging
+app.use(cors()); // Permite CORS
+app.use(express.json()); // Permite parsarea JSON
 
-app.use('/api/contacts', contactsRouter)
+// Utilizare a routerului de contacte
+app.use('/api/contacts', contactsRouter);
 
+// Middleware pentru rutele necunoscute
 app.use((req, res) => {
-  res.status(404).json({ message: 'Not found' })
-})
+  res.status(404).json({ message: 'Not found' });
+});
 
+// Middleware pentru gestionarea erorilor
 app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message })
-})
+  res.status(500).json({ message: err.message });
+});
 
-module.exports = app
+// Exportă aplicația
+module.exports = app;
